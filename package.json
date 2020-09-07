@@ -1,0 +1,11 @@
+{
+  "name": "lambdazoo",
+  "version": "0.0.1",
+  "description": "TBD",
+  "main": "index.js",
+  "author": "Lawrence D'Anna <larry@elder-gods.org>",
+  "license": "MIT",
+  "dependencies": {
+    "typescript-parsec": "^0.3.2"
+  }
+}
