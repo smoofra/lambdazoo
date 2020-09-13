@@ -8,7 +8,7 @@ type Term = Identifier | Lambda | Call;
 class Identifier {
     name: string;
     constructor(props:{name: string}) {
-        Object.assign(this, props);
+        this.name = props.name;
     }
 }
 
@@ -16,7 +16,8 @@ class Lambda {
     argument: string;
     term: Term;
     constructor(props: {argument:string, term: Term}) { 
-        Object.assign(this, props);
+        this.argument = props.argument;
+        this.term = props.term;
     }
 }
 
@@ -24,7 +25,8 @@ class Call {
     func: Term;
     argument: Term;
     constructor(props:{func: Term, argument: Term}) {
-        Object.assign(this, props);
+        this.func = props.func;
+        this.argument = props.argument;
     }
 }
 
@@ -51,7 +53,7 @@ const TERM = rule<TokenKind, Term>();
 const LAMBDA_TERM : Parser<TokenKind, Lambda> =
     apply(
         seq(str("λ"), tok(TokenKind.Identifier), str("→"), TERM),
-        function(value: [undefined, Token<TokenKind.Identifier>, undefined, Term], tokenRange:undefined) {
+        function(value: [any, Token<TokenKind.Identifier>, any, Term], tokenRange:any) {
             return new Lambda({argument: value[1].text, term: value[3]});
         }
     )
@@ -59,14 +61,14 @@ const LAMBDA_TERM : Parser<TokenKind, Lambda> =
 const IDENTIFIER_TERM: Parser<TokenKind, Identifier> =
     apply(
         tok(TokenKind.Identifier),
-        function(value: Token<TokenKind.Identifier>, tokenRange: undefined) {
+        function(value: Token<TokenKind.Identifier>, tokenRange: any) {
             return new Identifier({name: value.text});
         });
 
 const PAREN_TERM : Parser<TokenKind, Term> =
     apply(
         seq(str("("), TERM, str(")")),
-        function(value: [undefined, Term, undefined], tokenRange: undefined) {
+        function(value: [any, Term, any], tokenRange: any) {
             return value[1];
         }
     )
@@ -86,7 +88,7 @@ const CALL_TERM_ambig : Parser<TokenKind, Call> =
             seq(LAMBDA_TERM, TERM, rep_sc(TERM)),
             seq(PAREN_TERM, TERM, rep_sc(TERM)),
         ),
-        function(value: [Term, Term, Term[]], tokenRange: undefined) {
+        function(value: [Term, Term, Term[]], tokenRange: any) {
             return buildCalls(value[0], value[1], value[2]);
         }
     )
@@ -94,7 +96,7 @@ const CALL_TERM_ambig : Parser<TokenKind, Call> =
 const CALL_TERM : Parser<TokenKind, Call> =
     apply(
         amb(CALL_TERM_ambig),
-        function(value:Call[], tokenRange: undefined) {
+        function(value:Call[], tokenRange: any) {
             //console.log(value.map(termTree));
             return value[0]
         }
@@ -124,12 +126,13 @@ function termTree(term: Term): string {
     if (term instanceof Call) {
         return "(" + termTree(term.func) + " " + termTree(term.argument) + ")";
     }
-    if (term instanceof Lambda) {
+    else if (term instanceof Lambda) {
         return "(" + "λ" + term.argument + "→" + termTree(term.term) + ")";
     }
-    if (term instanceof Identifier) {
+    else if (term instanceof Identifier) {
         return term.name
     }
+    throw new Error("bad term");
 }
 
 for (const s of ["λ x → x x", "FOO BAR BAZ QUUX"]) {
