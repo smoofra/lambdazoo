@@ -3,59 +3,30 @@ import { Token, Parser, ParserOutput, ParseError, ParseResult } from 'typescript
 import { betterError, resultOrError, buildLexer, expectEOF, expectSingleResult, rule } from 'typescript-parsec';
 import { alt, apply, kmid, lrec_sc, seq, str, tok, rep_sc, amb } from 'typescript-parsec';
 
-function altx<TKind, T1, T2, T3, T4>(
-    p1: Parser<TKind, T1>,
-    p2: Parser<TKind, T2>,
-    p3: Parser<TKind, T3>,
-    p4: Parser<TKind, T4>
-): Parser<TKind, (T1 | T2 | T3 | T4)>;
-
-function altx(...ps: Parser<void, {}>[]): Parser<void, {}> {
-    return {
-        parse(token: Token<void> | undefined): ParserOutput<void, {}> {
-            let error: ParseError | undefined;
-            for (const p of ps) {
-                const output = p.parse(token);
-                error = betterError(error, output.error);
-                if (output.successful) {
-                    return output;
-                }
-            }
-            return {
-                successful: false,
-                error: error
-            };
-        }
-    };
-}
-
 type Term = Identifier | Lambda | Call;
 
 class Identifier {
     name: string;
-    constructor(name: string) {
-        this.name = name;
+    constructor(props:{name: string}) {
+        Object.assign(this, props);
     }
 }
 
 class Lambda {
     argument: string;
     term: Term;
-    constructor(argument: string, term: Term) {
-        this.argument = argument;
-        this.term = term;
+    constructor(props: {argument:string, term: Term}) { 
+        Object.assign(this, props);
     }
 }
 
 class Call {
     func: Term;
     argument: Term;
-    constructor(func: Term, argument: Term) {
-        this.func = func;
-        this.argument = argument;
+    constructor(props:{func: Term, argument: Term}) {
+        Object.assign(this, props);
     }
 }
-
 
 enum TokenKind {
     Lambda,
@@ -81,10 +52,7 @@ const LAMBDA_TERM : Parser<TokenKind, Lambda> =
     apply(
         seq(str("λ"), tok(TokenKind.Identifier), str("→"), TERM),
         function(value: [undefined, Token<TokenKind.Identifier>, undefined, Term], tokenRange:undefined) {
-            return new Lambda(
-                value[1].text,
-                value[3]
-            )
+            return new Lambda({argument: value[1].text, term: value[3]});
         }
     )
 
@@ -92,7 +60,7 @@ const IDENTIFIER_TERM: Parser<TokenKind, Identifier> =
     apply(
         tok(TokenKind.Identifier),
         function(value: Token<TokenKind.Identifier>, tokenRange: undefined) {
-            return new Identifier(value.text);
+            return new Identifier({name: value.text});
         });
 
 const PAREN_TERM : Parser<TokenKind, Term> =
@@ -105,9 +73,9 @@ const PAREN_TERM : Parser<TokenKind, Term> =
 
 function buildCalls(a:  Term, b: Term, cs: Term[]): Call {
     if (!cs.length)  {
-        return new Call(a, b);
+        return new Call({func:a, argument:b});
     } else {
-        return buildCalls(new Call(a,b), cs[0], cs.slice(1));
+        return buildCalls(new Call({func:a,argument:b}), cs[0], cs.slice(1));
     }
 }
 
