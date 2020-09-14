@@ -1,7 +1,7 @@
 {
   "name": "lambdazoo",
   "version": "0.0.1",
-  "description": "TBD",
+  "description": "lambda calculus playground",
   "main": "index.js",
   "author": "Lawrence D'Anna <larry@elder-gods.org>",
   "license": "MIT",
