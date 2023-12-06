@@ -71,7 +71,7 @@ function buildCalls(a:  Term, b: Term, cs: Term[]): Call {
     if (!cs.length)  {
         return {type:"call", func:a, argument:b};
     } else {
-        return buildCalls({type:"call", func:a,argument:b}, cs[0], cs.slice(1));
+        return buildCalls({type:"call", func:a, argument:b}, cs[0], cs.slice(1));
     }
 }
 
@@ -91,7 +91,6 @@ const CALL_TERM : Parser<TokenKind, Call> =
     apply(
         amb(CALL_TERM_ambig),
         function(value:Call[], tokenRange: any) {
-            //console.log(value.map(termTree));
             return value[0]
         }
     )
@@ -126,9 +125,3 @@ function termTree(term: Term): string {
             return term.name
     }
 }
-
-
-
-
-
-
