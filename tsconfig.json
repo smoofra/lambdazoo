@@ -3,6 +3,7 @@
         "outDir": "./lib",
         "moduleResolution": "node",
         "target": "ES2022",
+        "strict":  true,
         "noImplicitAny": true,
         "noImplicitThis": true,
         "alwaysStrict": true,
