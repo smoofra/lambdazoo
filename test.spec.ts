@@ -1,6 +1,6 @@
 import { strictEqual } from "assert";
 import {expectEOF} from "typescript-parsec"
-import {TERM, tokenizer, termTree, Term} from "./hello"
+import {TERM, tokenizer, termTree, Term} from "./lambda"
 
 function parse(s : string) : Term {
     const r = expectEOF(TERM.parse(tokenizer.parse(s)));
