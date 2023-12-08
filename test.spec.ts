@@ -1,8 +1,8 @@
 import { strictEqual } from "assert";
 import {expectEOF} from "typescript-parsec"
-import {TERM, tokenizer, termTree, Term, Declaration, TOPLEVEL} from "./lambda"
+import {TERM, λ0, tokenizer, termTree, Term, Declaration, TOPLEVEL} from "./lambda"
 
-function parseTerm(s : string) : Term {
+function parseTerm(s : string) : Term<λ0> {
     const r = expectEOF(TERM.parse(tokenizer.parse(s)));
     strictEqual (r.successful, true)
     if (r.successful) {
@@ -12,7 +12,7 @@ function parseTerm(s : string) : Term {
     throw new Error("failed.")
 }
 
-function parseToplevel(s : string) : Declaration[] {
+function parseToplevel(s : string) : Declaration<λ0>[] {
   const r = expectEOF(TOPLEVEL.parse(tokenizer.parse(s)));
   strictEqual (r.successful, true)
   if (r.successful) {
