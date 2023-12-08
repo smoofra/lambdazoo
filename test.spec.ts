@@ -1,6 +1,6 @@
 import { strictEqual } from "assert";
 import {expectEOF} from "typescript-parsec"
-import {TERM, λ0, tokenizer, termTree, Term, Declaration, TOPLEVEL} from "./lambda"
+import {TERM, λ0, tokenizer, termTree, Term, toJavascript, Declaration, TOPLEVEL} from "./lambda"
 
 function parseTerm(s : string) : Term<λ0> {
     const r = expectEOF(TERM.parse(tokenizer.parse(s)));
@@ -41,5 +41,11 @@ describe("lambdazoo tests", () => {
     strictEqual(termTree(id.term), "(λx→x)")
     strictEqual(meta.name, "meta")
     strictEqual(termTree(meta.term), "(λx→(x x))")
-  })
-});
+  });
+  it("translate to javascript", () => {
+    const two = eval(toJavascript(parseTerm("λ x → λ y → x (x y)")))
+    const inc = (x:number) => x + 1
+    strictEqual(two(inc)(0), 2)
+    strictEqual(two(inc)(1), 3)
+  });
+})

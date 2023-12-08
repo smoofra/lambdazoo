@@ -161,3 +161,14 @@ function termTree(term: Term<λ0>): string {
             return term.name
     }
 }
+
+export function toJavascript(term: Term<λ0>): string {
+    switch(term.kind) {
+        case "call":
+            return `${toJavascript(term.func)}(${toJavascript(term.argument)})`
+        case "lambda":
+            return `(${term.argument}) => {return ${toJavascript(term.term)}}`
+        case "identifier":
+            return term.name
+    }
+}
