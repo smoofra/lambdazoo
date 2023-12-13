@@ -1,0 +1,11 @@
+UntypedLambdaCalculus {
+    Term = Call | Term1
+    Term1 = Parens | Lambda | Identifier
+    Parens = "(" Term ")"
+    Lambda = "λ" Identifier "→" Term
+    Call = Term1 (~Declaration Term1)+
+    Identifier = identifer
+    identifer = letter alnum*
+    Declaration = Identifier "=" Term
+    Toplevel = Declaration*
+}

@@ -1,26 +1,5 @@
-import { strictEqual } from "assert";
-import {expectEOF} from "typescript-parsec"
-import {TERM, λ0, tokenizer, termTree, Term, toJavascript, Declaration, TOPLEVEL} from "./lambda"
-
-function parseTerm(s : string) : Term<λ0> {
-    const r = expectEOF(TERM.parse(tokenizer.parse(s)));
-    strictEqual (r.successful, true)
-    if (r.successful) {
-        strictEqual(r.candidates.length, 1)
-        return r.candidates[0].result;
-    }
-    throw new Error("failed.")
-}
-
-function parseToplevel(s : string) : Declaration<λ0>[] {
-  const r = expectEOF(TOPLEVEL.parse(tokenizer.parse(s)));
-  strictEqual (r.successful, true)
-  if (r.successful) {
-      strictEqual(r.candidates.length, 1)
-      return r.candidates[0].result;
-  }
-  throw new Error("failed.")
-}
+import { ok, strictEqual } from "assert";
+import {termTree, toJavascript, parseTerm, parseToplevel} from "./lambda"
 
 let src = `
 id = λ x → x
