@@ -69,10 +69,6 @@ export function toJavascript(term: Term<λ0>): string {
 
 const semantics: UntypedLambdaCalculusSemantics = grammar.createSemantics()
 
-function term(node: ohm.NonterminalNode): Term<λ0> {
-    return node.term()
-}
-
 interface Node {
     term(): Term<λ0>
     declaration(): Declaration<λ0>
@@ -80,14 +76,12 @@ interface Node {
     identifier(): string
 }
 
-function S(n: unknown): Node {
-    return n as Node
+// coerce a semantics dictionary from ohm to someting less type-erased
+function S(n: ohm.Dict): Node {
+    return (n as unknown) as Node
 }
 
 semantics.addOperation<Term<λ0>>('term()', {
-    Term(t) {
-        return term(t)
-    },
     Identifier(x) {
         return {kind: "identifier", name: x.sourceString}
     },
