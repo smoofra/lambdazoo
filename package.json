@@ -9,17 +9,10 @@
     "ohm-js": "^17.1.0"
   },
   "scripts": {
-    "compile": "tsc",
-    "test": "mocha",
-    "generate": "ohm generateBundles --withTypes *.ohm"
+    "generate": "ohm generateBundles --esm --withTypes *.ohm"
   },
   "devDependencies": {
     "@ohm-js/cli": "^2.0.0",
-    "@types/assert": "^1.5.2",
-    "@types/mocha": "^10.0.6",
-    "assert": "^2.0.0",
-    "mocha": "^10.2.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.3.3"
+    "@types/node": "^22.7.9"
   }
 }

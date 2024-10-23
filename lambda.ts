@@ -1,6 +1,9 @@
 
 import * as ohm from 'ohm-js'
-import grammar, {UntypedLambdaCalculusSemantics} from './lambda.ohm-bundle';
+
+// @ts-types="./lambda.ohm-bundle.d.ts"
+import grammar, {UntypedLambdaCalculusSemantics} from './lambda.ohm-bundle.js'
+
 export { grammar }
 
 type Language = {
@@ -77,13 +80,13 @@ interface Node {
     identifier(): string
 }
 
-function S(n: any): Node {
-    return n
+function S(n: unknown): Node {
+    return n as Node
 }
 
 semantics.addOperation<Term<λ0>>('term()', {
     Term(t) {
-        return t.term()
+        return term(t)
     },
     Identifier(x) {
         return {kind: "identifier", name: x.sourceString}
@@ -95,8 +98,8 @@ semantics.addOperation<Term<λ0>>('term()', {
         return S(term).term()
     },
     Call(func, args) {
-        var t : Term<λ0> = S(func).term()
-        for (let arg of args.children) {
+        let t : Term<λ0> = S(func).term()
+        for (const arg of args.children) {
             t = {kind: "call", func: t, argument: S(arg).term()}
         }
         return t
