@@ -3,7 +3,9 @@ import * as ohm from 'ohm-js'
 
 // @ts-types="./lambda.ohm-bundle.d.ts"
 import grammar, {UntypedLambdaCalculusSemantics} from './lambda.ohm-bundle.js'
+import { patch } from './builtins.js'
 
+patch(grammar)
 export { grammar }
 
 type Language = {
@@ -107,7 +109,7 @@ semantics.addOperation<string>('identifier()', {
 })
 
 semantics.addOperation<Declaration<λ0>>('declaration()', {
-    Declaration(name, _, term) {
+    Declaration(_, name, __, term) {
         return {kind: "let", name: S(name).identifier(), term: S(term).term()}
     }
 })

@@ -6,6 +6,8 @@ UntypedLambdaCalculus {
     Call = Term1 (~Declaration Term1)+
     Identifier = identifer
     identifer = letter alnum*
-    Declaration = Identifier "=" Term
+    Declaration = StartOfLine Identifier "=" Term
     Toplevel = Declaration*
+
+    StartOfLine = "dummy"
 }
