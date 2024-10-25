@@ -52,7 +52,7 @@ export function termTree(term: Term<λ0>): string {
         case "call":
             return "(" + termTree(term.func) + " " + termTree(term.argument) + ")";
         case "lambda":
-            return "(" + "λ" + term.argument + "→" + termTree(term.term) + ")";
+            return "(" + "λ" + term.argument + "." + termTree(term.term) + ")";
         case "identifier":
             return term.name
     }

@@ -7,25 +7,25 @@ Deno.test("left association", () => {
 })
 
 Deno.test("bind calls stronger than lambda", () => {
-    strictEqual(termTree(parseTerm("λ x → x x")), "(λx→(x x))")
+    strictEqual(termTree(parseTerm("λ x . x x")), "(λx.(x x))")
 })
 
 
 const src = `
-id = λ x → x
-meta = λ x → x x
+id = λx. x
+meta = λx. x x
 `
 
 Deno.test("parse toplevel declarations", () => {
     const [id, meta] = parseToplevel(src)
     strictEqual(id.name, "id")
-    strictEqual(termTree(id.term), "(λx→x)")
+    strictEqual(termTree(id.term), "(λx.x)")
     strictEqual(meta.name, "meta")
-    strictEqual(termTree(meta.term), "(λx→(x x))")
+    strictEqual(termTree(meta.term), "(λx.(x x))")
 })
 
 Deno.test("translate to javascript", () => {
-    const two = eval(toJavascript(parseTerm("λ x → λ y → x (x y)")))
+    const two = eval(toJavascript(parseTerm("λx. λ y . x (x y)")))
     const inc = (x:number) => x + 1
     strictEqual(two(inc)(0), 2)
     strictEqual(two(inc)(1), 3)
