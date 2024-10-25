@@ -12,7 +12,6 @@
     "generate": "ohm generateBundles --esm --withTypes *.ohm"
   },
   "devDependencies": {
-    "@ohm-js/cli": "^2.0.0",
-    "@types/node": "^22.7.9"
+    "@ohm-js/cli": "^2.0.0"
   }
 }
